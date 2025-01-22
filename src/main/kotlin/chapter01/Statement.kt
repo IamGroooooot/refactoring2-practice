@@ -10,30 +10,32 @@ fun statement(invoice: Invoice, plays: Plays): String {
     val format = { number: Double -> NumberFormat.getCurrencyInstance(US).format(number) }
 
     for (perf in invoice.performances) {
-        val play = plays.get(perf.playID)
+        val play = plays[perf.playID]
         var thisAmount = 0
 
-        when (play.type) {
-            PlayType.TRAGEDY -> {
+        when (play!!.type) {
+            "tragedy" -> {
                 thisAmount = 40000
                 if (perf.audience > 30) {
                     thisAmount += 1000 * (perf.audience - 30)
                 }
             }
-
-            PlayType.COMEDY -> {
+            "comedy" -> {
                 thisAmount = 30000
                 if (perf.audience > 20) {
                     thisAmount += 10000 + 500 * (perf.audience - 20)
                 }
                 thisAmount += 300 * perf.audience
             }
+            else -> {
+                throw Error("알 수 없는 장르: ${play.type}")
+            }
         }
 
         // 포인트를 적립한다.
         volumeCredit += maxOf(perf.audience - 30, 0)
         // 희극 관객 5명마다 추가 포인트를 제공한다
-        if (play.type == PlayType.COMEDY) volumeCredit += perf.audience / 5
+        if (play.type == "comedy") volumeCredit += perf.audience / 5
 
         // 청구 내역을 출력한다.
         result += "  ${play.name}: ${format(thisAmount / 100.0)} (${perf.audience}석)\n"

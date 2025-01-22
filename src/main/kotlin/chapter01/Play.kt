@@ -5,5 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Play(
     val name: String,
-    val type: PlayType
+    val type: String
 )
+
+typealias Plays = Map<String, Play>

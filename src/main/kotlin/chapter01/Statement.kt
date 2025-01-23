@@ -53,7 +53,7 @@ fun statement(invoice: Invoice, plays: Plays): String {
         return volumeCredits
     }
 
-    fun 임시(): Int {
+    fun totalAmount(): Int {
         var totalAmount = 0
         for (perf in invoice.performances) {
             totalAmount += amountFor(perf)
@@ -67,9 +67,7 @@ fun statement(invoice: Invoice, plays: Plays): String {
         result += "  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n"
     }
 
-    var totalAmount = 임시()
-
-    result += "총액: ${usd(totalAmount)}\n"
+    result += "총액: ${usd(totalAmount())}\n"
     result += "적립 포인트: ${totalVolumeCredits()}점"
     return result
 }

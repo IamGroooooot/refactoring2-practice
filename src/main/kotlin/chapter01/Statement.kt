@@ -4,6 +4,10 @@ import java.text.NumberFormat
 import java.util.Locale.US
 
 fun statement(invoice: Invoice, plays: Plays): String {
+    return renderPlainText(plays, invoice)
+}
+
+private fun renderPlainText(plays: Plays, invoice: Invoice): String {
     fun playFor(aPerformance: Performance): Play {
         return plays[aPerformance.playID]!!
     }
@@ -66,7 +70,6 @@ fun statement(invoice: Invoice, plays: Plays): String {
         // 청구 내역을 출력한다.
         result += "  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n"
     }
-
     result += "총액: ${usd(totalAmount())}\n"
     result += "적립 포인트: ${totalVolumeCredits()}점"
     return result

@@ -13,6 +13,15 @@ class EnrichedPerformance(
 ) {
     var amount: Int = 0
     var volumeCredits: Int = 0
+    var performanceCalculator: PerformanceCalculator? = null
+}
+
+class PerformanceCalculator {
+    var aPerformance: EnrichedPerformance
+
+    constructor(aPerformance: EnrichedPerformance) {
+        this.aPerformance = aPerformance
+    }
 }
 
 internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData {
@@ -66,6 +75,7 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
         )
         result.amount = amountFor(result)
         result.volumeCredits = volumeCreditsFor(result)
+        result.performanceCalculator = PerformanceCalculator(result)
         return result
     }
 

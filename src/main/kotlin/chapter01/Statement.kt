@@ -53,13 +53,21 @@ fun statement(invoice: Invoice, plays: Plays): String {
         return volumeCredits
     }
 
-    var totalAmount = 0
+    fun 임시(): Int {
+        var totalAmount = 0
+        for (perf in invoice.performances) {
+            totalAmount += amountFor(perf)
+        }
+        return totalAmount
+    }
+
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
     for (perf in invoice.performances) {
         // 청구 내역을 출력한다.
         result += "  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n"
-        totalAmount += amountFor(perf)
     }
+
+    var totalAmount = 임시()
 
     result += "총액: ${usd(totalAmount)}\n"
     result += "적립 포인트: ${totalVolumeCredits()}점"

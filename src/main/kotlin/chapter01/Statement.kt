@@ -45,20 +45,23 @@ fun statement(invoice: Invoice, plays: Plays): String {
         return NumberFormat.getCurrencyInstance(US).format(number / 100.0)
     }
 
+    fun totalVolumeCredits(): Int {
+        var volumeCredits = 0
+        for (perf in invoice.performances) {
+            volumeCredits += volumeCreditsFor(perf)
+        }
+        return volumeCredits
+    }
+
     var totalAmount = 0
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
-
     for (perf in invoice.performances) {
         // 청구 내역을 출력한다.
         result += "  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n"
         totalAmount += amountFor(perf)
     }
 
-    var volumeCredits = 0
-    for (perf in invoice.performances) {
-        volumeCredits += volumeCreditsFor(perf)
-    }
-
+    val volumeCredits = totalVolumeCredits()
     result += "총액: ${usd(totalAmount)}\n"
     result += "적립 포인트: ${volumeCredits}점"
     return result

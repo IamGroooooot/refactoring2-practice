@@ -4,11 +4,6 @@ import java.text.NumberFormat
 import java.util.Locale.US
 
 fun statement(invoice: Invoice, plays: Plays): String {
-    var totalAmount = 0
-    var volumeCredit = 0
-    var result = "청구 내역 (고객명: ${invoice.customer})\n"
-    val format = { number: Double -> NumberFormat.getCurrencyInstance(US).format(number) }
-
     fun playFor(aPerformance: Performance): Play {
         return plays[aPerformance.playID]!!
     }
@@ -39,12 +34,22 @@ fun statement(invoice: Invoice, plays: Plays): String {
         return result
     }
 
-    for (perf in invoice.performances) {
+    fun volumeCreditFor(perf: Performance): Int {
         // 포인트를 적립한다.
-        volumeCredit += maxOf(perf.audience - 30, 0)
-
+        var volumeCredit = maxOf(perf.audience - 30, 0)
         // 희극 관객 5명마다 추가 포인트를 제공한다
-        if (playFor(perf).type == "comedy") volumeCredit += perf.audience / 5
+        if (playFor(perf).type == "comedy")
+            volumeCredit += perf.audience / 5
+        return volumeCredit
+    }
+
+    var totalAmount = 0
+    var volumeCredit = 0
+    var result = "청구 내역 (고객명: ${invoice.customer})\n"
+    val format = { number: Double -> NumberFormat.getCurrencyInstance(US).format(number) }
+
+    for (perf in invoice.performances) {
+        volumeCredit += volumeCreditFor(perf)
 
         // 청구 내역을 출력한다.
         result += "  ${playFor(perf).name}: ${format(amountFor(perf) / 100.0)} (${perf.audience}석)\n"

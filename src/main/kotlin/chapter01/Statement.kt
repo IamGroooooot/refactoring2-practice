@@ -41,8 +41,8 @@ fun statement(invoice: Invoice, plays: Plays): String {
         return result
     }
 
-    fun format(number: Double): String {
-        return NumberFormat.getCurrencyInstance(US).format(number)
+    fun usd(number: Int): String {
+        return NumberFormat.getCurrencyInstance(US).format(number / 100.0)
     }
 
     var totalAmount = 0
@@ -53,11 +53,11 @@ fun statement(invoice: Invoice, plays: Plays): String {
         volumeCredits += volumeCreditsFor(perf)
 
         // 청구 내역을 출력한다.
-        result += "  ${playFor(perf).name}: ${format(amountFor(perf) / 100.0)} (${perf.audience}석)\n"
+        result += "  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n"
         totalAmount += amountFor(perf)
     }
 
-    result += "총액: ${format(totalAmount / 100.0)}\n"
+    result += "총액: ${usd(totalAmount)}\n"
     result += "적립 포인트: ${volumeCredits}점"
     return result
 }

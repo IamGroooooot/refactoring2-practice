@@ -13,7 +13,7 @@ fun statement(invoice: Invoice, plays: Plays): String {
         return plays[aPerformance.playID]!!
     }
 
-    fun amountFor(aPerformance: Performance, play: Play): Int {
+    fun amountFor(aPerformance: Performance): Int {
         var result = 0
         when (playFor(aPerformance).type) {
             "tragedy" -> {
@@ -40,7 +40,7 @@ fun statement(invoice: Invoice, plays: Plays): String {
     }
 
     for (perf in invoice.performances) {
-        val thisAmount = amountFor(perf, playFor(perf))
+        val thisAmount = amountFor(perf)
 
         // 포인트를 적립한다.
         volumeCredit += maxOf(perf.audience - 30, 0)

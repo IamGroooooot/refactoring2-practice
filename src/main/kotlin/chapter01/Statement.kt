@@ -2,15 +2,15 @@ package chapter01
 
 import java.text.NumberFormat
 import java.util.Locale.US
-import kotlin.collections.mutableMapOf
 
 fun statement(invoice: Invoice, plays: Plays): String {
-    val statementData = mutableMapOf<String, Any>();
+    val statementData = mutableMapOf<String, Any>()
     statementData.put("customer", invoice.customer)
-    return renderPlainText(statementData, invoice, plays)
+    statementData.put("performances", invoice.performances)
+    return renderPlainText(statementData, plays)
 }
 
-private fun renderPlainText(data: MutableMap<String, Any>, invoice: Invoice, plays: Plays): String {
+private fun renderPlainText(data: MutableMap<String, Any>, plays: Plays): String {
     fun playFor(aPerformance: Performance): Play {
         return plays[aPerformance.playID]!!
     }
@@ -54,7 +54,7 @@ private fun renderPlainText(data: MutableMap<String, Any>, invoice: Invoice, pla
 
     fun totalVolumeCredits(): Int {
         var result = 0
-        for (perf in invoice.performances) {
+        for (perf in data["performances"] as List<Performance>) {
             result += volumeCreditsFor(perf)
         }
         return result
@@ -62,14 +62,14 @@ private fun renderPlainText(data: MutableMap<String, Any>, invoice: Invoice, pla
 
     fun totalAmount(): Int {
         var result = 0
-        for (perf in invoice.performances) {
+        for (perf in data["performances"] as List<Performance>) {
             result += amountFor(perf)
         }
         return result
     }
 
     var result = "청구 내역 (고객명: ${data["customer"]})\n"
-    for (perf in invoice.performances) {
+    for (perf in data["performances"] as List<Performance>) {
         // 청구 내역을 출력한다.
         result += "  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n"
     }

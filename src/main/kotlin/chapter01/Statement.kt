@@ -35,9 +35,7 @@ fun statement(invoice: Invoice, plays: Plays): String {
     }
 
     fun volumeCreditsFor(perf: Performance): Int {
-        // 포인트를 적립한다.
         var volumeCredit = maxOf(perf.audience - 30, 0)
-        // 희극 관객 5명마다 추가 포인트를 제공한다
         if (playFor(perf).type == "comedy")
             volumeCredit += perf.audience / 5
         return volumeCredit

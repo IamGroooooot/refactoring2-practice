@@ -5,21 +5,21 @@ import java.util.Locale.US
 
 fun statement(invoice: Invoice, plays: Plays): String {
     fun amountFor(perf: Performance, play: Play): Int {
-        var thisAmount = 0
+        var result = 0
         when (play.type) {
             "tragedy" -> {
-                thisAmount = 40000
+                result = 40000
                 if (perf.audience > 30) {
-                    thisAmount += 1000 * (perf.audience - 30)
+                    result += 1000 * (perf.audience - 30)
                 }
             }
 
             "comedy" -> {
-                thisAmount = 30000
+                result = 30000
                 if (perf.audience > 20) {
-                    thisAmount += 10000 + 500 * (perf.audience - 20)
+                    result += 10000 + 500 * (perf.audience - 20)
                 }
-                thisAmount += 300 * perf.audience
+                result += 300 * perf.audience
             }
 
             else -> {
@@ -27,7 +27,7 @@ fun statement(invoice: Invoice, plays: Plays): String {
             }
         }
 
-        return thisAmount
+        return result
     }
 
     var totalAmount = 0

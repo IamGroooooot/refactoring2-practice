@@ -6,7 +6,13 @@ import java.util.Locale.US
 fun statement(invoice: Invoice, plays: Plays): String {
     val statementData = mutableMapOf<String, Any>()
     statementData.put("customer", invoice.customer)
-    statementData.put("performances", invoice.performances)
+
+    fun enrichPerformance(performance: Performance): Performance {
+        val result = performance.copy()
+        return result
+    }
+    statementData.put("performances", invoice.performances.map { enrichPerformance(it) })
+
     return renderPlainText(statementData, plays)
 }
 

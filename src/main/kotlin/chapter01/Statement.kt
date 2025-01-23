@@ -2,12 +2,15 @@ package chapter01
 
 import java.text.NumberFormat
 import java.util.Locale.US
+import kotlin.collections.mutableMapOf
 
 fun statement(invoice: Invoice, plays: Plays): String {
-    return renderPlainText(invoice, plays)
+    val statementData = mutableMapOf<String, Any>();
+    statementData.put("customer", invoice.customer)
+    return renderPlainText(statementData, invoice, plays)
 }
 
-private fun renderPlainText(invoice: Invoice, plays: Plays): String {
+private fun renderPlainText(data: MutableMap<String, Any>, invoice: Invoice, plays: Plays): String {
     fun playFor(aPerformance: Performance): Play {
         return plays[aPerformance.playID]!!
     }
@@ -65,7 +68,7 @@ private fun renderPlainText(invoice: Invoice, plays: Plays): String {
         return result
     }
 
-    var result = "청구 내역 (고객명: ${invoice.customer})\n"
+    var result = "청구 내역 (고객명: ${data["customer"]})\n"
     for (perf in invoice.performances) {
         // 청구 내역을 출력한다.
         result += "  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n"

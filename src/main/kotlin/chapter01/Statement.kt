@@ -4,22 +4,22 @@ import java.text.NumberFormat
 import java.util.Locale.US
 
 fun statement(invoice: Invoice, plays: Plays): String {
-    fun amountFor(perf: Performance, play: Play): Int {
+    fun amountFor(aPerformance: Performance, play: Play): Int {
         var result = 0
         when (play.type) {
             "tragedy" -> {
                 result = 40000
-                if (perf.audience > 30) {
-                    result += 1000 * (perf.audience - 30)
+                if (aPerformance.audience > 30) {
+                    result += 1000 * (aPerformance.audience - 30)
                 }
             }
 
             "comedy" -> {
                 result = 30000
-                if (perf.audience > 20) {
-                    result += 10000 + 500 * (perf.audience - 20)
+                if (aPerformance.audience > 20) {
+                    result += 10000 + 500 * (aPerformance.audience - 20)
                 }
-                result += 300 * perf.audience
+                result += 300 * aPerformance.audience
             }
 
             else -> {

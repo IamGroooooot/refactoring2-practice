@@ -17,7 +17,7 @@ class StatementTest {
     }
 
     @Test
-    fun `should print a statement`() {
+    fun `should print a text statement`() {
         // Arrange: 기대하는 출력
         val expected = """
             청구 내역 (고객명: BigCo)
@@ -30,6 +30,28 @@ class StatementTest {
 
         // Act: statement 함수 호출
         val actual = statement(invoices[0], plays)
+
+        // Assert: 기대하는 출력과 실제 출력 비교
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `should print an HTML statement`() {
+        // Arrange: 기대하는 출력
+        val expected = """
+            <h1>청구 내역 (고객명: BigCo)</h1>
+            <table>
+            <tr><th>연극</th><th>좌석 수</th><th>금액</th></tr>
+            <tr><td>Hamlet</td><td>55</td><td>$650.00</td></tr>
+            <tr><td>As You Like It</td><td>35</td><td>$580.00</td></tr>
+            <tr><td>Othello</td><td>40</td><td>$500.00</td></tr>
+            </table>
+            <p>총액: <em>$1,730.00</em></p>
+            <p>적립 포인트: <em>47</em>점</p>
+        """.trimIndent()
+
+        // Act: htmlStatement 함수 호출
+        val actual = htmlStatement(invoices[0], plays)
 
         // Assert: 기대하는 출력과 실제 출력 비교
         assertEquals(expected, actual)

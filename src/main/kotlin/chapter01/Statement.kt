@@ -9,9 +9,13 @@ fun statement(invoice: Invoice, plays: Plays): String {
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
     val format = { number: Double -> NumberFormat.getCurrencyInstance(US).format(number) }
 
+    fun playFor(aPerformance: Performance): Play {
+        return plays[aPerformance.playID]!!
+    }
+
     fun amountFor(aPerformance: Performance, play: Play): Int {
         var result = 0
-        when (play.type) {
+        when (playFor(aPerformance).type) {
             "tragedy" -> {
                 result = 40000
                 if (aPerformance.audience > 30) {
@@ -28,15 +32,11 @@ fun statement(invoice: Invoice, plays: Plays): String {
             }
 
             else -> {
-                throw Error("알 수 없는 장르: ${play.type}")
+                throw Error("알 수 없는 장르: ${playFor(aPerformance).type}")
             }
         }
 
         return result
-    }
-
-    fun playFor(aPerformance: Performance): Play {
-        return plays[aPerformance.playID]!!
     }
 
     for (perf in invoice.performances) {

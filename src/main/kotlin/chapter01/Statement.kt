@@ -40,8 +40,6 @@ fun statement(invoice: Invoice, plays: Plays): String {
     }
 
     for (perf in invoice.performances) {
-        val thisAmount = amountFor(perf)
-
         // 포인트를 적립한다.
         volumeCredit += maxOf(perf.audience - 30, 0)
 
@@ -49,8 +47,8 @@ fun statement(invoice: Invoice, plays: Plays): String {
         if (playFor(perf).type == "comedy") volumeCredit += perf.audience / 5
 
         // 청구 내역을 출력한다.
-        result += "  ${playFor(perf).name}: ${format(thisAmount / 100.0)} (${perf.audience}석)\n"
-        totalAmount += thisAmount
+        result += "  ${playFor(perf).name}: ${format(amountFor(perf) / 100.0)} (${perf.audience}석)\n"
+        totalAmount += amountFor(perf)
     }
 
     result += "총액: $${"%,.2f".format(totalAmount / 100.0)}\n"

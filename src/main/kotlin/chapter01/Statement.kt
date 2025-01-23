@@ -34,7 +34,7 @@ fun statement(invoice: Invoice, plays: Plays): String {
         return result
     }
 
-    fun volumeCreditFor(perf: Performance): Int {
+    fun volumeCreditsFor(perf: Performance): Int {
         // 포인트를 적립한다.
         var volumeCredit = maxOf(perf.audience - 30, 0)
         // 희극 관객 5명마다 추가 포인트를 제공한다
@@ -44,12 +44,12 @@ fun statement(invoice: Invoice, plays: Plays): String {
     }
 
     var totalAmount = 0
-    var volumeCredit = 0
+    var volumeCredits = 0
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
     val format = { number: Double -> NumberFormat.getCurrencyInstance(US).format(number) }
 
     for (perf in invoice.performances) {
-        volumeCredit += volumeCreditFor(perf)
+        volumeCredits += volumeCreditsFor(perf)
 
         // 청구 내역을 출력한다.
         result += "  ${playFor(perf).name}: ${format(amountFor(perf) / 100.0)} (${perf.audience}석)\n"
@@ -57,6 +57,6 @@ fun statement(invoice: Invoice, plays: Plays): String {
     }
 
     result += "총액: $${"%,.2f".format(totalAmount / 100.0)}\n"
-    result += "적립 포인트: ${volumeCredit}점"
+    result += "적립 포인트: ${volumeCredits}점"
     return result
 }

@@ -4,10 +4,10 @@ import java.text.NumberFormat
 import java.util.Locale.US
 
 fun statement(invoice: Invoice, plays: Plays): String {
-    return renderPlainText(plays, invoice)
+    return renderPlainText(invoice, plays)
 }
 
-private fun renderPlainText(plays: Plays, invoice: Invoice): String {
+private fun renderPlainText(invoice: Invoice, plays: Plays): String {
     fun playFor(aPerformance: Performance): Play {
         return plays[aPerformance.playID]!!
     }

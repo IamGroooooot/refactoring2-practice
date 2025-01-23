@@ -3,25 +3,35 @@ package chapter01
 import java.text.NumberFormat
 import java.util.Locale.US
 
+data class StatementData(
+    val customer: String, val performances: List<EnrichedPerformance>
+)
+
+data class EnrichedPerformance(
+    val playID: String, val audience: Int, val play: Play
+)
+
 fun statement(invoice: Invoice, plays: Plays): String {
-    val statementData = mutableMapOf<String, Any>()
-    statementData.put("customer", invoice.customer)
-
-    fun enrichPerformance(performance: Performance): Performance {
-        val result = performance.copy()
-        return result
-    }
-    statementData.put("performances", invoice.performances.map { enrichPerformance(it) })
-
-    return renderPlainText(statementData, plays)
-}
-
-private fun renderPlainText(data: MutableMap<String, Any>, plays: Plays): String {
     fun playFor(aPerformance: Performance): Play {
         return plays[aPerformance.playID]!!
     }
 
-    fun amountFor(aPerformance: Performance): Int {
+    fun enrichPerformance(performance: Performance): EnrichedPerformance {
+        return EnrichedPerformance(
+            performance.playID, performance.audience, playFor(performance)
+        )
+    }
+
+    val statementData = StatementData(invoice.customer, invoice.performances.map { enrichPerformance(it) })
+    return renderPlainText(statementData, plays)
+}
+
+private fun renderPlainText(data: StatementData, plays: Plays): String {
+    fun playFor(aPerformance: EnrichedPerformance): Play {
+        return plays[aPerformance.playID]!!
+    }
+
+    fun amountFor(aPerformance: EnrichedPerformance): Int {
         var result = 0
         when (playFor(aPerformance).type) {
             "tragedy" -> {
@@ -47,10 +57,9 @@ private fun renderPlainText(data: MutableMap<String, Any>, plays: Plays): String
         return result
     }
 
-    fun volumeCreditsFor(aPerformance: Performance): Int {
+    fun volumeCreditsFor(aPerformance: EnrichedPerformance): Int {
         var result = maxOf(aPerformance.audience - 30, 0)
-        if (playFor(aPerformance).type == "comedy")
-            result += aPerformance.audience / 5
+        if (playFor(aPerformance).type == "comedy") result += aPerformance.audience / 5
         return result
     }
 
@@ -60,7 +69,7 @@ private fun renderPlainText(data: MutableMap<String, Any>, plays: Plays): String
 
     fun totalVolumeCredits(): Int {
         var result = 0
-        for (perf in data["performances"] as List<Performance>) {
+        for (perf in data.performances) {
             result += volumeCreditsFor(perf)
         }
         return result
@@ -68,14 +77,14 @@ private fun renderPlainText(data: MutableMap<String, Any>, plays: Plays): String
 
     fun totalAmount(): Int {
         var result = 0
-        for (perf in data["performances"] as List<Performance>) {
+        for (perf in data.performances) {
             result += amountFor(perf)
         }
         return result
     }
 
-    var result = "청구 내역 (고객명: ${data["customer"]})\n"
-    for (perf in data["performances"] as List<Performance>) {
+    var result = "청구 내역 (고객명: ${data.customer})\n"
+    for (perf in data.performances) {
         // 청구 내역을 출력한다.
         result += "  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n"
     }

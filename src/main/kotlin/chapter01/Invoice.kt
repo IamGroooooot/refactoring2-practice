@@ -11,5 +11,5 @@ data class Invoice(
 @Serializable
 data class Performance(
     val playID: String,
-    val audience: Int
+    val audience: Int,
 )

@@ -4,6 +4,11 @@ import java.text.NumberFormat
 import java.util.Locale.US
 
 fun statement(invoice: Invoice, plays: Plays): String {
+    var totalAmount = 0
+    var volumeCredit = 0
+    var result = "청구 내역 (고객명: ${invoice.customer})\n"
+    val format = { number: Double -> NumberFormat.getCurrencyInstance(US).format(number) }
+
     fun amountFor(aPerformance: Performance, play: Play): Int {
         var result = 0
         when (play.type) {
@@ -30,13 +35,12 @@ fun statement(invoice: Invoice, plays: Plays): String {
         return result
     }
 
-    var totalAmount = 0
-    var volumeCredit = 0
-    var result = "청구 내역 (고객명: ${invoice.customer})\n"
-    val format = { number: Double -> NumberFormat.getCurrencyInstance(US).format(number) }
+    fun playFor(aPerformance: Performance): Play {
+        return plays[aPerformance.playID]!!
+    }
 
     for (perf in invoice.performances) {
-        val play = plays[perf.playID]!!
+        val play = playFor(perf)
         val thisAmount = amountFor(perf, play)
 
         // 포인트를 적립한다.

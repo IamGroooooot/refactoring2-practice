@@ -61,8 +61,7 @@ fun statement(invoice: Invoice, plays: Plays): String {
         totalAmount += amountFor(perf)
     }
 
-    val volumeCredits = totalVolumeCredits()
     result += "총액: ${usd(totalAmount)}\n"
-    result += "적립 포인트: ${volumeCredits}점"
+    result += "적립 포인트: ${totalVolumeCredits()}점"
     return result
 }

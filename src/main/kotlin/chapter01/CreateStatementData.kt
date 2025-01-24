@@ -63,30 +63,8 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
         return plays[aPerformance.playID]!!
     }
 
-    fun amountFor(aPerformance: EnrichedPerformance): Int {
-        var result = 0
-        when (aPerformance.play?.type) {
-            "tragedy" -> {
-                result = 40000
-                if (aPerformance.audience > 30) {
-                    result += 1000 * (aPerformance.audience - 30)
-                }
-            }
-
-            "comedy" -> {
-                result = 30000
-                if (aPerformance.audience > 20) {
-                    result += 10000 + 500 * (aPerformance.audience - 20)
-                }
-                result += 300 * aPerformance.audience
-            }
-
-            else -> {
-                throw Error("알 수 없는 장르: ${aPerformance.play?.type}")
-            }
-        }
-
-        return result
+    fun amountFor(aPerformance: Performance): Int {
+        return PerformanceCalculator(aPerformance, playFor(aPerformance)).amount
     }
 
     fun volumeCreditsFor(aPerformance: EnrichedPerformance): Int {
@@ -107,7 +85,7 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
         val calculator = PerformanceCalculator(aPerformance, playFor(aPerformance))
         val result = EnrichedPerformance(aPerformance)
         result.play = calculator.play
-        result.amount = amountFor(result)
+        result.amount = amountFor(aPerformance)
         result.volumeCredits = volumeCreditsFor(result)
         return result
     }

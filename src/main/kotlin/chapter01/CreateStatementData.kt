@@ -8,18 +8,24 @@ data class StatementData(
     var totalVolumeCredits: Int = 0
 }
 
-class EnrichedPerformance(
-    val playID: String, val audience: Int, val play: Play
-) {
+class EnrichedPerformance() {
+    var playID: String = ""
+    var audience: Int = 0
     var amount: Int = 0
     var volumeCredits: Int = 0
+    var play: Play? = null
     var performanceCalculator: PerformanceCalculator? = null
+
+    constructor(aPerformance: Performance) : this() {
+        this.playID = aPerformance.playID
+        this.audience = aPerformance.audience
+    }
 }
 
 class PerformanceCalculator {
-    var aPerformance: EnrichedPerformance
+    var aPerformance: Performance
 
-    constructor(aPerformance: EnrichedPerformance) {
+    constructor(aPerformance: Performance) {
         this.aPerformance = aPerformance
     }
 }
@@ -31,7 +37,7 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
 
     fun amountFor(aPerformance: EnrichedPerformance): Int {
         var result = 0
-        when (aPerformance.play.type) {
+        when (aPerformance.play?.type) {
             "tragedy" -> {
                 result = 40000
                 if (aPerformance.audience > 30) {
@@ -48,7 +54,7 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
             }
 
             else -> {
-                throw Error("알 수 없는 장르: ${aPerformance.play.type}")
+                throw Error("알 수 없는 장르: ${aPerformance.play?.type}")
             }
         }
 
@@ -57,7 +63,7 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
 
     fun volumeCreditsFor(aPerformance: EnrichedPerformance): Int {
         var result = maxOf(aPerformance.audience - 30, 0)
-        if (aPerformance.play.type == "comedy") result += aPerformance.audience / 5
+        if (aPerformance.play?.type == "comedy") result += aPerformance.audience / 5
         return result
     }
 
@@ -70,16 +76,16 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
     }
 
     fun enrichPerformance(aPerformance: Performance): EnrichedPerformance {
-        val result = EnrichedPerformance(
-            aPerformance.playID, aPerformance.audience, playFor(aPerformance)
-        )
+        val calculator = PerformanceCalculator(aPerformance)
+        val result = EnrichedPerformance(aPerformance)
+        result.play = playFor(aPerformance)
         result.amount = amountFor(result)
         result.volumeCredits = volumeCreditsFor(result)
-        result.performanceCalculator = PerformanceCalculator(result)
         return result
     }
 
-    val statementData = StatementData(invoice.customer, invoice.performances.map { enrichPerformance(it) }).apply {
+    val statementData = StatementData(
+        invoice.customer, invoice.performances.map { enrichPerformance(it) }).apply {
         totalAmount = totalAmount(this)
         totalVolumeCredits = totalVolumeCredits(this)
     }

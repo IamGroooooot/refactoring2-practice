@@ -29,11 +29,12 @@ open class PerformanceCalculator {
         get() {
             throw Error("서브클래스에서 처리하도록 설계되었습니다.")
         }
-    val volumeCredits: Int
+    open val volumeCredits: Int
         get() {
-            var result = maxOf(this.aPerformance.audience - 30, 0)
-            if (this.play?.type == "comedy") result += this.aPerformance.audience / 5
-            return result
+            return maxOf(this.aPerformance.audience - 30, 0)
+//            var result = maxOf(this.aPerformance.audience - 30, 0)
+//            if (this.play?.type == "comedy") result += this.aPerformance.audience / 5
+//            return result
         }
 
     constructor(aPerformance: Performance, aPlay: Play) {
@@ -64,6 +65,10 @@ class ComedyCalculator : PerformanceCalculator {
             }
             result += 300 * this.aPerformance.audience
             return result
+        }
+    override val volumeCredits: Int
+        get() {
+            return super.volumeCredits + this.aPerformance.audience / 5
         }
 
     constructor(aPerformance: Performance, aPlay: Play) : super(aPerformance, aPlay)

@@ -14,7 +14,6 @@ class EnrichedPerformance() {
     var amount: Int = 0
     var volumeCredits: Int = 0
     var play: Play? = null
-    var calculator: PerformanceCalculator? = null
 
     constructor(aPerformance: Performance) : this() {
         this.playID = aPerformance.playID

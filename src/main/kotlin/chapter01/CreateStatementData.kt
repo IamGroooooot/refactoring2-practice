@@ -69,10 +69,6 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
         return plays[aPerformance.playID]!!
     }
 
-    fun volumeCreditsFor(aPerformance: Performance): Int {
-        return PerformanceCalculator(aPerformance, playFor(aPerformance)).volumeCredits
-    }
-
     fun totalVolumeCredits(data: StatementData): Int {
         return data.performances.sumOf { it.volumeCredits }
     }
@@ -86,7 +82,7 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
         val result = EnrichedPerformance(aPerformance)
         result.play = calculator.play
         result.amount = calculator.amount
-        result.volumeCredits = volumeCreditsFor(aPerformance)
+        result.volumeCredits = calculator.volumeCredits
         return result
     }
 

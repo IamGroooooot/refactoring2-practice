@@ -78,7 +78,7 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
     }
 
     fun enrichPerformance(aPerformance: Performance): EnrichedPerformance {
-        val calculator = PerformanceCalculator(aPerformance, playFor(aPerformance))
+        val calculator = createPerformanceCalculator(aPerformance, playFor(aPerformance))
         val result = EnrichedPerformance(aPerformance)
         result.play = calculator.play
         result.amount = calculator.amount
@@ -93,3 +93,6 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
     }
     return statementData
 }
+
+private fun createPerformanceCalculator(aPerformance: Performance, aPlay: Play): PerformanceCalculator =
+    PerformanceCalculator(aPerformance, aPlay)

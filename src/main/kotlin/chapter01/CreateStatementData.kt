@@ -51,6 +51,12 @@ class PerformanceCalculator {
 
             return result
         }
+    val volumeCredits: Int
+        get() {
+            var result = maxOf(this.aPerformance.audience - 30, 0)
+            if (this.play?.type == "comedy") result += this.aPerformance.audience / 5
+            return result
+        }
 
     constructor(aPerformance: Performance, aPlay: Play) {
         this.aPerformance = aPerformance
@@ -63,14 +69,8 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
         return plays[aPerformance.playID]!!
     }
 
-    fun amountFor(aPerformance: Performance): Int {
-        return PerformanceCalculator(aPerformance, playFor(aPerformance)).amount
-    }
-
-    fun volumeCreditsFor(aPerformance: EnrichedPerformance): Int {
-        var result = maxOf(aPerformance.audience - 30, 0)
-        if (aPerformance.play?.type == "comedy") result += aPerformance.audience / 5
-        return result
+    fun volumeCreditsFor(aPerformance: Performance): Int {
+        return PerformanceCalculator(aPerformance, playFor(aPerformance)).volumeCredits
     }
 
     fun totalVolumeCredits(data: StatementData): Int {
@@ -85,8 +85,8 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
         val calculator = PerformanceCalculator(aPerformance, playFor(aPerformance))
         val result = EnrichedPerformance(aPerformance)
         result.play = calculator.play
-        result.amount = amountFor(aPerformance)
-        result.volumeCredits = volumeCreditsFor(result)
+        result.amount = calculator.amount
+        result.volumeCredits = volumeCreditsFor(aPerformance)
         return result
     }
 

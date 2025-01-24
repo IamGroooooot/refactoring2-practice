@@ -30,10 +30,7 @@ open class PerformanceCalculator {
             var result = 0
             when (this.play?.type) {
                 "tragedy" -> {
-                    result = 40000
-                    if (this.aPerformance.audience > 30) {
-                        result += 1000 * (this.aPerformance.audience - 30)
-                    }
+                    throw Error("오류 발생")
                 }
 
                 "comedy" -> {

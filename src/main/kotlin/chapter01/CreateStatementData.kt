@@ -34,11 +34,7 @@ open class PerformanceCalculator {
                 }
 
                 "comedy" -> {
-                    result = 30000
-                    if (this.aPerformance.audience > 20) {
-                        result += 10000 + 500 * (this.aPerformance.audience - 20)
-                    }
-                    result += 300 * this.aPerformance.audience
+                    throw Error("오류 발생")
                 }
 
                 else -> {
@@ -75,6 +71,16 @@ class TragedyCalculator : PerformanceCalculator {
 }
 
 class ComedyCalculator : PerformanceCalculator {
+    override val amount: Int
+        get() {
+            var result = 30000
+            if (this.aPerformance.audience > 20) {
+                result += 10000 + 500 * (this.aPerformance.audience - 20)
+            }
+            result += 300 * this.aPerformance.audience
+            return result
+        }
+
     constructor(aPerformance: Performance, aPlay: Play) : super(aPerformance, aPlay)
 }
 

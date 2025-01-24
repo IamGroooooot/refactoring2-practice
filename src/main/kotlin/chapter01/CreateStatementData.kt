@@ -25,7 +25,7 @@ class EnrichedPerformance() {
 open class PerformanceCalculator {
     var aPerformance: Performance
     var play: Play? = null
-    val amount: Int
+    open val amount: Int
         get() {
             var result = 0
             when (this.play?.type) {
@@ -65,6 +65,15 @@ open class PerformanceCalculator {
 }
 
 class TragedyCalculator : PerformanceCalculator {
+    override val amount: Int
+        get() {
+            var result = 40000
+            if (this.aPerformance.audience > 30) {
+                result += 1000 * (this.aPerformance.audience - 30)
+            }
+            return result
+        }
+
     constructor(aPerformance: Performance, aPlay: Play) : super(aPerformance, aPlay)
 }
 

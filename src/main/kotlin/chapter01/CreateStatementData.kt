@@ -14,7 +14,7 @@ class EnrichedPerformance() {
     var amount: Int = 0
     var volumeCredits: Int = 0
     var play: Play? = null
-    var performanceCalculator: PerformanceCalculator? = null
+    var calculator: PerformanceCalculator? = null
 
     constructor(aPerformance: Performance) : this() {
         this.playID = aPerformance.playID
@@ -24,9 +24,37 @@ class EnrichedPerformance() {
 
 class PerformanceCalculator {
     var aPerformance: Performance
+    var play: Play? = null
+    val amount: Int
+        get() {
+            var result = 0
+            when (this.play?.type) {
+                "tragedy" -> {
+                    result = 40000
+                    if (this.aPerformance.audience > 30) {
+                        result += 1000 * (this.aPerformance.audience - 30)
+                    }
+                }
 
-    constructor(aPerformance: Performance) {
+                "comedy" -> {
+                    result = 30000
+                    if (this.aPerformance.audience > 20) {
+                        result += 10000 + 500 * (this.aPerformance.audience - 20)
+                    }
+                    result += 300 * this.aPerformance.audience
+                }
+
+                else -> {
+                    throw Error("알 수 없는 장르: ${this.play?.type}")
+                }
+            }
+
+            return result
+        }
+
+    constructor(aPerformance: Performance, aPlay: Play) {
         this.aPerformance = aPerformance
+        this.play = aPlay
     }
 }
 
@@ -76,9 +104,9 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
     }
 
     fun enrichPerformance(aPerformance: Performance): EnrichedPerformance {
-        val calculator = PerformanceCalculator(aPerformance)
+        val calculator = PerformanceCalculator(aPerformance, playFor(aPerformance))
         val result = EnrichedPerformance(aPerformance)
-        result.play = playFor(aPerformance)
+        result.play = calculator.play
         result.amount = amountFor(result)
         result.volumeCredits = volumeCreditsFor(result)
         return result

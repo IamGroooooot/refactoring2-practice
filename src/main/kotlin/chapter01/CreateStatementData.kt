@@ -27,22 +27,7 @@ open class PerformanceCalculator {
     var play: Play? = null
     open val amount: Int
         get() {
-            var result = 0
-            when (this.play?.type) {
-                "tragedy" -> {
-                    throw Error("오류 발생")
-                }
-
-                "comedy" -> {
-                    throw Error("오류 발생")
-                }
-
-                else -> {
-                    throw Error("알 수 없는 장르: ${this.play?.type}")
-                }
-            }
-
-            return result
+            throw Error("서브클래스에서 처리하도록 설계되었습니다.")
         }
     val volumeCredits: Int
         get() {

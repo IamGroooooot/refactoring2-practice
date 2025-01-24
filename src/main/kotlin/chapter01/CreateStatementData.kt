@@ -22,7 +22,7 @@ class EnrichedPerformance() {
     }
 }
 
-class PerformanceCalculator {
+open class PerformanceCalculator {
     var aPerformance: Performance
     var play: Play? = null
     val amount: Int
@@ -64,6 +64,14 @@ class PerformanceCalculator {
     }
 }
 
+class TragedyCalculator : PerformanceCalculator {
+    constructor(aPerformance: Performance, aPlay: Play) : super(aPerformance, aPlay)
+}
+
+class ComedyCalculator : PerformanceCalculator {
+    constructor(aPerformance: Performance, aPlay: Play) : super(aPerformance, aPlay)
+}
+
 internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData {
     fun playFor(aPerformance: Performance): Play {
         return plays[aPerformance.playID]!!
@@ -94,5 +102,10 @@ internal fun createStatementData(plays: Plays, invoice: Invoice): StatementData 
     return statementData
 }
 
-private fun createPerformanceCalculator(aPerformance: Performance, aPlay: Play): PerformanceCalculator =
-    PerformanceCalculator(aPerformance, aPlay)
+private fun createPerformanceCalculator(aPerformance: Performance, aPlay: Play): PerformanceCalculator {
+    return when (aPlay.type) {
+        "tragedy" -> TragedyCalculator(aPerformance, aPlay)
+        "comedy" -> ComedyCalculator(aPerformance, aPlay)
+        else -> throw Error("알 수 없는 장르: ${aPlay.type}")
+    }
+}

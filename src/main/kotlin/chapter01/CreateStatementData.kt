@@ -32,9 +32,6 @@ open class PerformanceCalculator {
     open val volumeCredits: Int
         get() {
             return maxOf(this.aPerformance.audience - 30, 0)
-//            var result = maxOf(this.aPerformance.audience - 30, 0)
-//            if (this.play?.type == "comedy") result += this.aPerformance.audience / 5
-//            return result
         }
 
     constructor(aPerformance: Performance, aPlay: Play) {
